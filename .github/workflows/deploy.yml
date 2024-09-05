@@ -17,12 +17,15 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Log in to Amazon ECR
-      uses: aws-actions/amazon-ecr-login@v2
+      uses: aws-actions/amazon-ecr-login@v1
       with:
-        registry-type: 'ecr'
-        region: ${{ secrets.AWS_REGION }}
+        registry-type: 'private'
 
     - name: Build and push Docker image
+      env:
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         docker build -t 211125328135.dkr.ecr.ap-south-1.amazonaws.com/my-medusa-backend:latest .
         docker push 211125328135.dkr.ecr.ap-south-1.amazonaws.com/my-medusa-backend:latest
